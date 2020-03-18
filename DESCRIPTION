@@ -13,7 +13,8 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     magrittr,
-    reshape2
+    reshape2,
+    dplyr
 Suggests: 
     testthat (>= 2.1.0)
 URL: https://github.com/mattsnelson/handytools

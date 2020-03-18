@@ -18,6 +18,7 @@
 #'
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %>%
+#' @importFrom dplyr select
 #'
 #' @export
 
@@ -33,7 +34,7 @@ melt384 <- function(samples){
   samples$position <- paste0(samples$Var1, samples$Var2) #add in position number "A1", "A2", etc
 
   samples <- samples %>%
-    select(position, value)
+    dplyr::select(position, value)
 
   return(samples) #TODO check this works; this should output the tidy list
 }
