@@ -11,8 +11,9 @@ Description: This package is a collection of all the handy scripts I've made ove
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
-Depends:
+Imports:
     dplyr,
+    magrittr,
     reshape2
 Suggests: 
     testthat (>= 2.1.0)

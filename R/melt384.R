@@ -18,7 +18,7 @@
 #'
 #' @importFrom reshape2 melt
 #'
-#' @import magrittr
+#' @importFrom magrittr %>%
 #'
 #' @export
 
