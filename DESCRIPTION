@@ -11,7 +11,7 @@ Description: This package is a collection of all the handy scripts I've made ove
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
-Imports:
+Depends:
     dplyr,
     reshape2
 Suggests: 
