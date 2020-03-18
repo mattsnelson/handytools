@@ -16,8 +16,9 @@
 #       A2  221
 #       A3  222 , etc/#'
 #'
+#' @importFrom reshape2 melt
 #'
-#'
+#' @import magrittr
 #'
 #' @export
 
