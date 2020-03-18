@@ -7,17 +7,19 @@
 melt384(samples)
 }
 \arguments{
-\item{x}{this is the first number to input}
-
-\item{y}{this is the second number to input}
+\item{samples}{this is your 384 well plate data (16 x 24 format)}
 }
 \description{
 melt384
 }
 \examples{
-samples <- any_384_well_dataframe # needs to be 24 x 16
-melt384(samples)
-output:
-     A1  220
+samples <- read.csv(my__384_well_plate)   #needs to be
+samples_tidy <- handytools::melt384(samples)
+
+# Example output:
+#   position   value
+#      A1      220
+#      A2      221
+#      A3      222 , etc....
 
 }
