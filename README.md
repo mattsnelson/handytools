@@ -7,6 +7,8 @@ Oh hai there! Are you a biologist who spends *way* too much time copying and pas
 
 ![Awesome](https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/giphy.gif)
 
+![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+
 Over the course of my PhD I made many a handy little script for data wrangling the outputs of various experiments, icluding qPCR and ELISA plates, CLAMS data (and a link) and more. Ater many years living in various folders and subfolders, being copied and *slightly* modified (and then trying to find which modified copy I wanted), they finally have a home on the internet!
 
 ## Installation
