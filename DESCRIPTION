@@ -12,7 +12,6 @@ License: What license it uses
 Encoding: UTF-8
 LazyData: true
 Imports:
-    dplyr,
     magrittr,
     reshape2
 Suggests: 
