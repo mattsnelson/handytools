@@ -2,9 +2,9 @@
 % Please edit documentation in R/melt384.R
 \name{melt384}
 \alias{melt384}
-\title{Take a 384 well plate output and melt to tidy data}
+\title{melt384}
 \usage{
-melt384(x, y = 3)
+melt384(samples)
 }
 \arguments{
 \item{x}{this is the first number to input}
@@ -12,5 +12,12 @@ melt384(x, y = 3)
 \item{y}{this is the second number to input}
 }
 \description{
-Testing first as a simple function (takes 2 inputs)
+melt384
+}
+\examples{
+samples <- any_384_well_dataframe # needs to be 24 x 16
+melt384(samples)
+output:
+     A1  220
+
 }
