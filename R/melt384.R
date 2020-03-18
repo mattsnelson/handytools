@@ -17,7 +17,6 @@
 #       A3  222 , etc/#'
 #'
 #' @importFrom reshape2 melt
-#'
 #' @importFrom magrittr %>%
 #'
 #' @export
@@ -30,7 +29,7 @@ melt384 <- function(samples){
   colnames(samples) <- seq(1:24) #assign column numbers
   rownames(samples) <- LETTERS[1:16] #assign row letters
 
-  samples <- melt(samples)
+  samples <- reshape2::melt(samples)
   samples$position <- paste0(samples$Var1, samples$Var2) #add in position number "A1", "A2", etc
 
   samples <- samples %>%
