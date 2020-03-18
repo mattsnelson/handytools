@@ -11,10 +11,11 @@ Description: This package is a collection of all the handy scripts I've made ove
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
-Suggests: 
+Imports:
     dplyr,
-    testthat (>= 2.1.0),
     reshape2
+Suggests: 
+    testthat (>= 2.1.0)
 URL: https://github.com/mattsnelson/handytools
 BugReports: https://github.com/mattsnelson/handytools/issues
 RoxygenNote: 7.1.0
