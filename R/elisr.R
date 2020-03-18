@@ -1,5 +1,7 @@
-#' @title ELISR:
+#' @name elisr
+#' @title elisr
 #'
+#' @description i'll describe it later yp. also add params and example
 #'
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %>%

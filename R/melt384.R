@@ -1,6 +1,6 @@
 #' @title melt384
 #'
-#' @desription This script takes an input of a 384 well template and melts it to give the value with well position
+#' @description This script takes an input of a 384 well template and melts it to give the value with well position
 #'
 #' @param samples this is your 384 well plate data (16 x 24 format)
 #'

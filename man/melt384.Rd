@@ -10,7 +10,7 @@ melt384(samples)
 \item{samples}{this is your 384 well plate data (16 x 24 format)}
 }
 \description{
-melt384
+This script takes an input of a 384 well template and melts it to give the value with well position
 }
 \examples{
 samples <- read.csv(my__384_well_plate)   #needs to be
