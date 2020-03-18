@@ -17,7 +17,7 @@
 #       A3  222 , etc/#'
 #'
 #' @importFrom reshape2 melt
-#' @importFrom(magrittr,"%>%")
+#' @importFrom magrittr "%>%"
 #'
 #' @export
 
