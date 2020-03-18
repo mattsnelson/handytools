@@ -8,6 +8,7 @@
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_cols
 #' @importFrom dplyr group_by
 #' @importFrom dplyr mutate
 #' @importFrom tidyr spread
