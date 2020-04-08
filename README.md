@@ -27,11 +27,24 @@ library(handytools)
 ## basic example code
 ```
 
+### elisr
+
+TODO: add in description
+
+### rna2cdna
+
+takes qiaxpert input and checks for quality and batch effects.
+
+calculates water and RNA to add into cDNA synthesis reaction
+
+TODO: update this with an example/figure
+
+### cdna_plan_printable
+
+takes the output of the above cDNA synthesis paln and just makes it more readable (and printable so can have a hardcopy for going into the lab)
+
 ### melt384
 
 
 
-### elisr
-
-
-
+### melt384
