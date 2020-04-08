@@ -51,8 +51,6 @@ rna2cdna <- function(input_rna, desired_rna.ug = 2.5, batch_effect = "rna-extrac
 
     cdna_synthesis$rna_extraction_batch <- as.factor(cdna_synthesis$rna_extraction_batch) #factorise batch effect
 
-    batch_effect_present = 1
-
   } else {
 
     # select out mouse, path, batch number, RNA concentration, and the A260/A280 and A260/A230 ratios
@@ -62,11 +60,7 @@ rna2cdna <- function(input_rna, desired_rna.ug = 2.5, batch_effect = "rna-extrac
     ### Change names to simplofy downstream analysis
     colnames(cdna_synthesis)[3:5] <- c("A260_conc_ng.ul", "A260A280", "A260A230")
 
-    batch_effect_present = 0
   }
-
-
-  head(cdna_synthesis) #check changed
 
   ####=========assign RNA quailty score==================
   j <- length(colnames(cdna_synthesis))
@@ -96,13 +90,6 @@ rna2cdna <- function(input_rna, desired_rna.ug = 2.5, batch_effect = "rna-extrac
   #order factors for RNA qual rating
   cdna_synthesis$RNA_quality_rating <- factor(cdna_synthesis$RNA_quality_rating,
                                               levels = c("HIGH", "GOOD", "FAIR", "POOR", "BAD", "ERROR"))
-  str(cdna_synthesis)#double check strucure
-
-  # graph quality scores by batch to check for batch effects:
-
-  if(batch_effect_present == 1){
-    ggplot(cdna_synthesis, aes(rna_extraction_batch)) + geom_bar(aes(fill=RNA_quality_rating))
-  }
 
   #### ============ CALCULATIONS FOR cDNA REACTIONS =========
   # In this section will make the calcluations of what will add in cDNA synthesis reactions
