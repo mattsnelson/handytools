@@ -39,6 +39,23 @@ calculates water and RNA to add into cDNA synthesis reaction
 
 TODO: update this with an example/figure
 
+TODO: make this a markdown table:
+
+Qulaity Score   A260/A280
+HIGH   > 2.0
+GOOD   1.8 - 2.0
+FAIR   1.7 - 1.8
+POOR   1.6 - 1.7
+BAD    < 1.6
+
+Example code to get output:
+``` r
+cdna_synthesis <- handytools::rna2cdna(rna_conc)
+ggplot(cdna_synthesis, aes(rna_extraction_batch)) + geom_bar(aes(fill=RNA_quality_rating))
+```
+
+add here: example of table.
+
 ### cdna_plan_printable
 
 takes the output of the above cDNA synthesis paln and just makes it more readable (and printable so can have a hardcopy for going into the lab)
