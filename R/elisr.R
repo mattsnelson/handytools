@@ -114,9 +114,9 @@ elisr <- function(template, od, blank = "B"){
 
   # round SD and CV % to 4 and 2 sig fig
 
-#    spread_list_w_mean_sd_cv <- spread_list_w_mean_sd_cv %>%
-#    dplyr::mutate(CV_percent = round(CV_percent, 2)) %>%
-#   dplyr::mutate(SD = round(SD, 4))
+    spread_list_w_mean_sd_cv <- spread_list_w_mean_sd_cv %>%
+    dplyr::mutate(CV_percent = round(CV_percent, 2)) %>%
+    dplyr::mutate(SD = round(SD, 5))
 
   #TODO remove: write.csv(spread_list_w_mean_sd_cv,"temp_with_cv.csv") (FOR DEBUGGING)
   ##====================================== ADD MEAN-BLANK====================================
