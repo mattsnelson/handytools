@@ -101,7 +101,7 @@ elisr <- function(template, od, blank = "B"){
   spread_list_w_mean <- spread_list %>% dplyr::mutate(mean = rowMeans(.[,2:ncol_new], na.rm = TRUE))
 
   ## ADD SD
-  with_sd_calc <- transform(for_calc_sd, SD=round(apply(for_calc_sd,1, sd, na.rm = TRUE)), 3)
+  with_sd_calc <- transform(for_calc_sd, SD=apply(for_calc_sd,1, sd, na.rm = TRUE))
 
   #TODO remove: write.csv(spread_list_w_mean,"temp_mean.csv") (FOR DEBUGGING)
   #TODO remove: wwrite.csv(with_sd_calc,"temp_sd.csv") (FOR DEBUGGING)
@@ -110,7 +110,13 @@ elisr <- function(template, od, blank = "B"){
 
   ## ADD %CV
   spread_list_w_mean_sd_cv <- spread_list_w_mean_sd %>%
-    dplyr::mutate(round(CV_percent = SD/mean * 100), 2)
+    dplyr::mutate(CV_percent = SD/mean * 100)
+
+  # round SD and CV % to 4 and 2 sig fig
+  spread_list_w_mean_sd_cv <- spread_list_w_mean_sd_cv %>%
+    dplyr::mutate(CV_percent = round(CV_percent, 2)) %>%
+    dplyr::mutate(SD = round(SD, 4))
+
   #TODO remove: write.csv(spread_list_w_mean_sd_cv,"temp_with_cv.csv") (FOR DEBUGGING)
   ##====================================== ADD MEAN-BLANK====================================
 
