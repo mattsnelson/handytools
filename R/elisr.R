@@ -1,7 +1,16 @@
 #' @name elisr
 #' @title elisr
 #'
-#' @description i'll describe it later yp. also add params and example
+#' @description This script groups together the ODs for the same sample/standard, calculates the mean, SD and %CV between them and
+#' then calcluates the mean - blank. Is agnostic to postion/number of samples/standards on the plate. (Got 4 replicates of one random sample spread out all over the plate - no worries!)
+#'
+#' @param template this is 96 well plate template
+#' @param od this is the OD data (can be absorbance/fluoro/etc) - in 96 well format
+#' @param blank the value in the plate template that specifies which position contains the blank (default = "B")
+#'
+#' @examples
+#' elisr(my_template, my_results, "BLK)
+#'
 #'
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %>%
@@ -17,8 +26,8 @@
 #' @export
 
 ## Function that takes the following INPUT:
-### Plate Template
-### Absorbance Values
+### Plate Template (96 well plate template)
+### Absorbance Values (96 well)
 
 ##and provides the output in a SPREAD format
 ### inculding: mean OD, standard deviation of OD and % CV of OD
@@ -111,12 +120,6 @@ elisr <- function(template, od, blank = "B"){
   ## ADD %CV
   spread_list_w_mean_sd_cv <- spread_list_w_mean_sd %>%
     dplyr::mutate(CV_percent = SD/mean * 100)
-
-  # round SD and CV % to 4 and 2 sig fig
-
-    spread_list_w_mean_sd_cv <- spread_list_w_mean_sd_cv %>%
-    dplyr::mutate(CV_percent = round(CV_percent, 2)) %>%
-    dplyr::mutate(SD = round(SD, 5))
 
   #TODO remove: write.csv(spread_list_w_mean_sd_cv,"temp_with_cv.csv") (FOR DEBUGGING)
   ##====================================== ADD MEAN-BLANK====================================

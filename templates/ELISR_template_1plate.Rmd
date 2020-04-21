@@ -1,0 +1,184 @@
+---
+title: "ELISR_template_1plate"
+author: "Matthew Snelson"
+date: "21/04/2020"
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: hide
+    theme: journal
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '..')  # set root-dir. assumes script is in a script directory.
+
+library(devtools)
+install_github("mattsnelson/handytools") #load ELISR package
+
+library(here)
+library(tidyverse)
+library(ggpubr)
+library(DT)
+library(drc)       # for 4pl sigmodial calcs
+```
+
+# Overview
+
+Instructions for using this template:
+- This is designed to be used with one plate only (have other templates for combining 2,3 or more plates)
+- Fill out the info required in the data-import section
+
+
+Experiment Conducted on XXXXXX
+
+This report compiled: `r Sys.time()`
+
+Kit: [R&D](https://www.rndsystems.com/products/mouse-cystatin-c-duoset-elisa_dy1238)
+
+Sample Dilution: 1:1200
+
+Standard concentrations in pg/mL
+
+Copmleted as per manufacturers instructions. Note only used TMB as substrate (rather than a 1:1 mic of TMB and H2O2 as they recommend; that doesn't work)
+
+
+# Data Import
+
+The handytools::elisr package requires the following things:
+- plate template (96 well format)
+      - with S1,S2, etc for the standards
+      - the blank (e.g. "BLK")
+      - sample ID (use path numbers)
+- plate data (96 well format)
+
+Additionally this workflow requires to input:
+- the concentrations of the standards.
+- the dilution factor
+- metadata table
+
+```{r dataimport, mesage=FALSE}
+# plate 1 repeat as required
+plate1_template <- readxl::read_xlsx(path=here("data/cys-c", "cys_c_plate_template.xlsx"), range = "B2:M10")
+plate1_data <- readxl::read_xlsx(path=here("data/cys-c/data-raw", "gpr43_cys-c_plate1.xlsx"), range = "B15:M23")  # range B15:M23 on clariostar output
+
+#plate 2
+plate2_template <- readxl::read_xlsx(path=here("data/cys-c", "cys_c_plate_template.xlsx"), range = "B21:M29")
+plate2_data <- readxl::read_xlsx(path=here("data/cys-c/data-raw", "gpr43_cys-c_plate2.xlsx"), range = "B15:M23")  # range B15:M23 on clariostar output
+
+
+# specify Blank
+blank = "BLK"
+
+# specify concentrations of the standards
+stds <- data.frame(ID=c(     "S1",  "S2",   "S3",  "S4",    "S5",     "S6",    "S7"),
+                   conc=c(     1000,     500,    250,  125,   62.5,   31.25,   15.6))
+
+# dilution factor
+dil <- 1200
+
+# metadata
+metadata <- read_csv(file="data/metadata/gpr43-metadata.csv")
+
+#write_path = where would like results outputted to 
+write_path <- "data/cys-c/data/cys_c_results.csv"
+
+```
+
+# Raw Data
+
+## Standards Concentration
+```{r}
+DT::datatable(stds)
+
+```
+
+
+## Plate 1 - Raw Data
+This is the raw OD data (inputted from excel) and the plate template:
+```{r}
+DT::datatable(plate1_template)
+
+DT::datatable(plate1_data)
+
+```
+
+# Analysis - Plate 1
+
+## Interpolation
+
+This uses my elisr function to manipulate data and then uses the drc package to fit to a 4 point sigmoidal curve.
+
+```{r plate1, message = FALSE, warning=FALSE}
+##Plate 1 Anlaysis
+plate1_output <- handytools::elisr(plate1_template, plate1_data, blank)
+colnames(plate1_output)[1] <- "ID"
+
+plate1_stds <- merge(stds, plate1_output, by= "ID", all.x=T, all.y=F) 
+
+plate1_model<-drm(mean_OD_minus_blank~conc,
+            fct=LL.4(names=c("Slope", "Lower", "Upper", "ED50")),
+            data=plate1_stds)  #creates 4PL model
+plot(plate1_model)
+
+plate1_resp <- plate1_output$mean_OD_minus_blank # values of samples here.
+
+plate1_results <-ED(plate1_model,plate1_resp,type="absolute",display=F)
+plate1_results <- as.data.frame(plate1_results)
+
+plate1_output[length(plate1_output)+1] <- plate1_results[1]
+plate1_output$plate <- "1"
+
+# multiply estimate by DIL factor to get concencentration
+plate1_output <- plate1_output %>%
+  mutate(sample_conc = Estimate * dil)
+
+# Round SD, CV% and Estimate (for easy reading)
+plate1_output$SD <- round(plate1_output$SD, 5)
+plate1_output$CV_percent <- round(plate1_output$CV_percent, 2)
+plate1_output$Estimate <- round(plate1_output$Estimate, 4)
+plate1_output$sample_conc <- round(plate1_output$sample_conc, 4)
+
+DT::datatable(plate1_output)
+```
+NB: "Estimate" (last column) is the concentration of the diluted sample.
+    "sampe_conc" = the sample concentration (the Estimate multiplied by the dilution factor)
+
+## Merge - Plate 1
+
+Merges with metadata to allow for graphing
+
+```{r plate1_merge}
+plate1_results <- plate1_output
+
+colnames(plate1_results)[1] <- "path"
+plate1_results <- merge(plate1_results, metadata, by = "path", all.x = TRUE, all.y = FALSE)
+
+DT::datatable(plate1_results)
+```
+
+
+## Graph:
+
+Graph Results
+
+```{r plate1_graph}
+ggplot(plate1_results, aes(x = group, y = sample_conc)) +
+  geom_boxplot(aes(fill = group)) + 
+    scale_fill_brewer(palette="Dark2") + 
+    labs(title="Experiment",x="Group", y = "Sample Concentration") + 
+    theme_minimal() + 
+    theme(axis.text.x = element_text(angle=90, hjust=1))
+
+
+write_csv(plate1_results, path = write_path)
+```
+
+Write results to: `r write_path`
+
+# SessionInfo
+
+```{r sessinfo}
+session_info()
+```
