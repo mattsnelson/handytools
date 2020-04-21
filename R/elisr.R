@@ -123,7 +123,7 @@ elisr <- function(template, od, blank = "B"){
 
   blank_mean <- spread_list_w_mean_sd_cv %>%  ##grab out blank mean
     filter(`sample ID` == blank) %>%
-    select(mean)
+    dplyr::select(mean)
 
   blank_mean <- as.numeric(blank_mean) # convert from data frame to a number
 
