@@ -1,7 +1,7 @@
 #' @name elisr
 #' @title elisr
 #'
-#' @description This script groups together the ODs for the same sample/standard, calculates the mean, SD and %CV between them and
+#' @description This script groups together the ODs for the same sample/standard, calculates the mean, SD and CV percent between them and
 #' then calcluates the mean - blank. Is agnostic to postion/number of samples/standards on the plate. (Got 4 replicates of one random sample spread out all over the plate - no worries!)
 #'
 #' @param template this is 96 well plate template
@@ -9,7 +9,7 @@
 #' @param blank the value in the plate template that specifies which position contains the blank (default = "B")
 #'
 #' @examples
-#' elisr(my_template, my_results, "BLK)
+#' handytools::elisr(my_template, my_results, "BLK")
 #'
 #'
 #' @importFrom reshape2 melt

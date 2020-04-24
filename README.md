@@ -27,9 +27,34 @@ library(handytools)
 ## basic example code
 ```
 
-### elisr
+## ELISA analysis
 
-TODO: add in description
+### elisr
+See templates/ELISR templates.Rmd for template workflows (#TODO)
+
+Takes a template and results (in 96 well format) and 
+ - melts together based on sampleID in template (agnostic to well position)
+ - averages ODs
+ - calcuates SD and CD%
+ - calculates (mean OD - blank)
+
+Example workflow:
+```  
+plate1_output <- handytools::elisr(my_template, raw_results, "BLK"")
+
+colnames(plate1_output)[1] <- "ID"
+
+plate1_stds <- merge(stds, plate1_output, by= "ID", all.x=T, all.y=F) 
+
+# Interpolation with drc package
+plate1_model<-drm(mean_OD_minus_blank~conc,
+            fct=LL.4(names=c("Slope", "Lower", "Upper", "ED50")),
+            data=plate1_stds)
+```
+
+## RT-PCR Workflow
+
+#
 
 ### rna2cdna
 
@@ -47,4 +72,9 @@ takes the output of the above cDNA synthesis paln and just makes it more readabl
 
 
 
-### melt384
+### ddct-taq
+
+This uses Taqman chemistry, where each well has 
+
+> block quote tet
+> what dis look like eh

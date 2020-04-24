@@ -1,7 +1,9 @@
 #' @name rna2cdna
 #' @title rna2cdna
 #'
-#' @description i'll describe it later yp. also add params and example
+#' @description Takes input of qiaxpert output (with a sample identifier #TODO)
+#'
+#'
 #'
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %>%

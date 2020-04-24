@@ -3,6 +3,19 @@
 \name{elisr}
 \alias{elisr}
 \title{elisr}
+\arguments{
+\item{template}{this is 96 well plate template}
+
+\item{od}{this is the OD data (can be absorbance/fluoro/etc) - in 96 well format}
+
+\item{blank}{the value in the plate template that specifies which position contains the blank (default = "B")}
+}
 \description{
-i'll describe it later yp. also add params and example
+This script groups together the ODs for the same sample/standard, calculates the mean, SD and CV percent between them and
+then calcluates the mean - blank. Is agnostic to postion/number of samples/standards on the plate. (Got 4 replicates of one random sample spread out all over the plate - no worries!)
+}
+\examples{
+handytools::elisr(my_template, my_results, "BLK")
+
+
 }
