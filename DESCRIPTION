@@ -1,6 +1,6 @@
 Package: handytools
 Title: Matt's Handy Scripts for Data Wrangling and More!
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "Matthew",
            family = "Snelson",
