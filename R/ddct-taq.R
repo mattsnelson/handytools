@@ -1,13 +1,18 @@
-#' @name ddct_taq
-#' @title ddct_taq
+#' @name ddct_sybr
+#' @title ddct_sybr
 #'
-#' @description Taq it easy! Here's a script that takes the Quantstudio RT-PCR output and your PCR template and then will go
-#' and make it all good man and do all that sweet ddCT calcs for you (TODO update)
+#' @description Workflow for calcuating differential gene expression from quantstudio output using Sybr green reagents.
 #'
-#' @param quantstudio_output This is the 'results" page of the quantstudio output (currently requires to be exactly just at the results - to fix up and make it so just improt whole sheet methinks)
-#' @param plate_map #this is a long list of which sample is in which well A1, A2, A3 etc (use output form melt384 for easiness perhaps)
-#' @param refgene Specify EXACTLY what you're refence gene is called in the Quantstdio import (default VIC-18S)
+#' Input must be in this format for this script to work easily
 #'
+#' Column 1: sample_id
+#' Column2: treatment_group
+#' Column3 - x: Cts for various genes of interest
+#' Last Column: CT for 18S (ideally called "ct_18s")
+#'
+#' @param input_cts This is the
+#' @param ref_group This is the EXACT name of the treatment_group that is being used as a control group for calcluating ddct (i.e. change from this group)
+#' @param cutoff_18S This is the cutoff over which 18S values will be discarded (default = 15)
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select
@@ -19,46 +24,17 @@
 library(tidyverse)
 library(janitor)
 
-ddct_taq <- function(quantstudio_output, plate_map, refgene){
+ddct_sybr <- function(input_cts, ref_group, cutoff_18S = 15){
 
-  #TODO make it so just find results on quantstudio page, rather than having to select exactly??#
-  #TODO make it so it nicely checks quantstudio input
+ #TODO check names of coulns is correct.
 
-  # results nicely by well.
-  pcr_results <- pcr_results %>%
-    janitor::clean_names() %>% #clean names
-    dplyr::select(well_position,target_name,ct) %>% #selecting out well_postition, 18S/gene and CT value
-    dplyr::filter(!is.na(target_name))
+  #TODO do check qualtiy of CTS against cutoff and also see about undetermineds. Add in CT comment case
 
-  genetargets <- unique(pcr_results$target_name) # grab a list of all the genes (at this point includes 18S)
-  genetargets <- genetargets[ genetargets != refgene ]  #removes 18S from list of gene targets on plate
+  #TODO do dCT cals - make as a loop an iterater per ct_gene (which can pull list from input doc)
 
-  pcr_results <- pcr_results %>%    # filter out any empty wells (where the target name is missing (NA))
-    tidyr::spread(key = target_name, value = ct)
+  #TODO do ddCT calcs - again iterate per gene
 
-  pcr_results <- merge(pcr_results,plate_map,by="well_position",all.x=T,all.y=F) #merge with sample ID number (handy for later methinks)
-
-  #TODO here remain refgene (or continue with refgene methinks?)
-
-  # then do a loop based on number of gene targets
-  for(i in genetargets){
-
-    #first up make a table for just this gene
-    #TODO add in sampeID too methinks
-    current_gene <- pcr_results %>%
-      select(well_position,                            # well position
-             colnames(pcr_results[i]),                 # gene of interst
-             colnames(pcr_results[refgene]))           # reference gene
-
-    head(current_gene)
-    #TODO drop nas form this list methikns
-
-    #then pull in all the commands re: doing ddCT etc here
-
-
-  }
-  #then will have to do an rbind at the end I think to get them all out perhaps??
-  # as a single return
+  #TODO make an outlier alert - i.e. so it alerts if any values are outliers in data.
 
 
 }

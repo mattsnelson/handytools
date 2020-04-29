@@ -91,7 +91,7 @@ Super simple handy script that takes a data frame in 384 well plate layout (e.g.
 
 So you're 24 x 16 plate becomes this:
 
-|  position | value |
+|  well_position | sample_id |
 |----|---|
 | A1  | 220 | 
 | A2  | 247 |
