@@ -2,8 +2,8 @@
 
 export("%>%")
 export(cdna_plan_printable)
+export(ddct)
 export(ddct_sybr)
-export(ddct_taq)
 export(elisr)
 export(melt384)
 export(rna2cdna)

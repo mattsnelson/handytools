@@ -1,70 +1,64 @@
 #' @name ddct_taq
 #' @title ddct_taq
 #'
-#' @description Taq it easy! Here's a script that takes your CT values for your 18S and gene of interest
-#' and does all those sweet ddCT calcs for you
+#' @description TODOWORK IN PROGRESS Taq it easy! Here's a script that takes the Quantstudio RT-PCR output and your PCR template and then will go
+#' and make it all good man and do all that sweet ddCT calcs for you (TODO update)
 #'
-#' @param ct_data_table Pre-prcoessed data here. Needs following minimum columns: "group" (100% necessary), "ct_gene" (can be named anything), and "ct_18S" (can specify name)
-#' @param refgroup specfiy which group within the treatment_group column is your reference group (default = "control")
-#' @param targetgene Specify EXACTLY name of target gene in the ct_data_table
-#' @param refgene Specify EXACTLY name of refence gene in the ct_data_table (default "ct-18s")
-#' @param refgene.cutoff CT cutoff for referene gene (default = 15)
+#' @param quantstudio_output This is the 'results" page of the quantstudio output (currently requires to be exactly just at the results - to fix up and make it so just improt whole sheet methinks)
+#' @param plate_map #this is a long list of which sample is in which well A1, A2, A3 etc (use output form melt384 for easiness perhaps)
+#' @param refgene Specify EXACTLY what you're refence gene is called in the Quantstdio import (default VIC-18S)
 #'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %>%
-#' @importFrom dplyr group_by
-#' @importFrom dplyr summarize
-#' @importFrom dplyr mutate
-#' @importFrom dplyr mutate_at
+#' @importFrom dplyr select
 #' @importFrom tidyr spread
 #' @importFrom janitor clean_names
 #'
 #' @export
 
-library(tidyverse)
-library(janitor)
-
-ddct_taq <- function(ct_data_table, refgroup = "control", targetgene, refgene, refgene.cutoff = 15){
-
-  #TODO sanity check re coulmn names
-
-  #====Deal with Undertermineds and Refgene over the cutoff==========
-  # Commenting re: Undetermined / High Ref genes
-  pcrlong1 <- ct_data_table %>%
-    dplyr::mutate(comment_gene = case_when(ct_data_table[targetgene]  == "Undetermined" ~ "Undetermined Target Gene")) %>%
-    dplyr::mutate(comment_ref = case_when(ct_data_table[refgene] == "Undetermined" ~ "Undetermined Ref Gene",
-                                   ct_data_table[refgene] != "Undetermined" & ct_data_table[refgene] > refgene.cutoff ~ "High Ref Gene CT") )
-  # any Undetermined values get replaced with NAs
-  pcrlong1 <- pcrlong1 %>%
-    dplyr::mutate_at(vars(colnames(pcrlong1[targetgene]),
-                   colnames(pcrlong1[refgene])),
-              na_if, "Undetermined")
-
-  #Replace values for the refgene that are over the refgene cutoff value with NA
-  pcrlong1[[refgene]][pcrlong1[[refgene]] > refgene.cutoff  ] <- NA
-
-  # make sure CT values are numeric (if undetermineds in there, will be character)
-  pcrlong1[[targetgene]] <- as.numeric(pcrlong1[[targetgene]])
-  pcrlong1[[refgene]] <- as.numeric(pcrlong1[[refgene]])
-
-  # do dCT calc
-  pcrlong1 <- pcrlong1 %>%
-    dplyr::mutate(dCT = pcrlong1[[targetgene]] - pcrlong1[[refgene]])
-
-  #====dtermine average dct per group, and pulling out the 'control' group average dct=====
-  pcrlong2 <- pcrlong1
-
-  mean_dct <- pcrlong2 %>%
-    dplyr::group_by(group) %>%
-    dplyr::summarize(mean_dct = mean(dCT, na.rm = T))
-
-  control_dct <- (mean_dct %>% filter (group==refgroup))[2]  #pulls out the mean dCT of the control group
-  control_dct <- deframe(control_dct) #make it a value, rather than a tibble
-
-  #=========calculate ddCT and fold change================
-  pcrlong3 <- pcrlong2 %>%
-    dplyr::mutate(ddCT = dCT - control_dct) %>%
-    dplyr::mutate(fold_change = 2^-ddCT)
-
-  return(pcrlong3)
-}
+# library(tidyverse)
+# library(janitor)
+#
+# ddct_taq <- function(quantstudio_output, plate_map, refgene){
+#
+#   #TODO make it so just find results on quantstudio page, rather than having to select exactly??#
+#   #TODO make it so it nicely checks quantstudio input
+#
+#   # results nicely by well.
+#   pcr_results <- pcr_results %>%
+#     janitor::clean_names() %>% #clean names
+#     dplyr::select(well_position,target_name,ct) %>% #selecting out well_postition, 18S/gene and CT value
+#     dplyr::filter(!is.na(target_name))
+#
+#   genetargets <- unique(pcr_results$target_name) # grab a list of all the genes (at this point includes 18S)
+#   genetargets <- genetargets[ genetargets != refgene ]  #removes 18S from list of gene targets on plate
+#
+#   pcr_results <- pcr_results %>%    # filter out any empty wells (where the target name is missing (NA))
+#     tidyr::spread(key = target_name, value = ct)
+#
+#   pcr_results <- merge(pcr_results,plate_map,by="well_position",all.x=T,all.y=F) #merge with sample ID number (handy for later methinks)
+#
+#   #TODO here remain refgene (or continue with refgene methinks?)
+#
+#   # then do a loop based on number of gene targets
+#   for(i in genetargets){
+#
+#     #first up make a table for just this gene
+#     #TODO add in sampeID too methinks
+#     current_gene <- pcr_results %>%
+#       select(well_position,                            # well position
+#              colnames(pcr_results[i]),                 # gene of interst
+#              colnames(pcr_results[refgene]))           # reference gene
+#
+#     head(current_gene)
+#     #TODO drop nas form this list methikns
+#
+#     #then pull in all the commands re: doing ddCT etc here
+#
+#
+#   }
+#   #then will have to do an rbind at the end I think to get them all out perhaps??
+#   # as a single return
+#
+#
+# }

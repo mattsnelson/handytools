@@ -89,7 +89,7 @@ Using Quantstudio (3 or 5) with either Taqman probes (allowing to multiplex with
 
 Super simple handy script that takes a data frame in 384 well plate layout (e.g. the plate template you drew up in excel to show which samples go where) and converts it to a long list with the well position.
 
-So you're 24 x 16 plate becomes this:
+So your 24 x 16 plate becomes this:
 
 |  well_position | sample_id |
 |----|---|
@@ -101,11 +101,37 @@ etc
 
 Doesn't seem like much, but it's super handy to have the plate template in this format for merging etc downstream with the Quantstudio output.
 
-### ddct-taq
+### ddct
+
+This calculates ddct for you.
+
+Minimum input required: 
+ - A table that has "group" (it must be called exactly group or else will fail...I haven't figured a way around this yet)
+ - ct values for your gene of interest (can name anything)
+- ct values for refernce gene  (can name anything)  
+
+|  group | gene_ct | ref_gene_ct
+|----|---|---|
+| Control  | 22.3 | 7.8 |
+| Control  | 23.5 | 8.2 |
+| Treatment  | 18.7 | 7.6 |
+| Treatment  | 21.7 | 6.5 |
+etc...
+
+Need to specify the names of your reference group, the target gene and reference gene (as they are named in the table). Also specify a cutoff for the refgene, values above this will be excluded (good sanity control in case low volume pipetted in).  
+
+`foldchange <- handytools::ddct(ct_data_table = pcr_results.mcp1, 
+                     refgroup = "Control",
+                     targetgene = "MCP-1",
+                     refgene = "18S",
+                     refgene.cutoff = 10)`
+
+
+### ddct_taq_multi
+
+maybe one day...or maybe not??
+
+### ddct_sybr
 
 TODO
-
-This uses Taqman chemistry, where each well has both a gene of interest (using a FAM probe) and a reference gene (with a VIC probe)
-
-This is setup to work nicely if you have multiple of the same sample IDs. (e.g. if you have 96 samples so run 4 genes, and therefore in the plate template the same sample ID will be used 4 times). Note the sample ID has to be exactly the same acrtoss the plate template for this to work nicely, mmmkay.
-
+maybe one day...or maybe not??
