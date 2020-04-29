@@ -17,9 +17,9 @@ samples <- read.csv(my__384_well_plate)   #needs to be
 samples_tidy <- handytools::melt384(samples)
 
 # Example output:
-#   position   value
-#      A1      220
-#      A2      221
-#      A3      222 , etc....
+#  well_position  sample_id
+#      A1         220
+#      A2         221
+#      A3         222 , etc....
 
 }

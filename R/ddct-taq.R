@@ -4,7 +4,7 @@
 #' @description Taq it easy! Here's a script that takes your CT values for your 18S and gene of interest
 #' and does all those sweet ddCT calcs for you
 #'
-#' @param ct_data_table Pre-prcoessed data here. Needs following minimum columns: "treatment_group", "ct_gene" (can be named anything), and "ct_18S" (can specify name)
+#' @param ct_data_table Pre-prcoessed data here. Needs following minimum columns: "group", "ct_gene" (can be named anything), and "ct_18S" (can specify name)
 #' @param refgroup specfiy which group within the treatment_group column is your reference group (default = "control")
 #' @param targetgene Specify EXACTLY name of target gene in the ct_data_table
 #' @param refgene Specify EXACTLY name of refence gene in the ct_data_table (default "ct-18s")
@@ -12,7 +12,10 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %>%
-#' @importFrom dplyr select
+#' @importFrom dplyr group_by
+#' @importFrom dplyr summarize
+#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate_at
 #' @importFrom tidyr spread
 #' @importFrom janitor clean_names
 #'
@@ -25,53 +28,43 @@ ddct_taq <- function(ct_data_table, refgroup = "control", targetgene, refgene, r
 
   #TODO sanity check re coulmn names
 
-  #====Deal with Undertermineds and 18S > 15==========
-  # Undetermineds
+  #====Deal with Undertermineds and Refgene over the cutoff==========
+  # Commenting re: Undetermined / High Ref genes
   pcrlong1 <- ct_data_table %>%
-    mutate(comment_gene = case_when(ct_data_table[targetgene]  == "Undetermined" ~ "Undetermined Target Gene")) %>%
-    mutate(comment_ref = case_when(ct_data_table[refgene] == "Undetermined" ~ "Undetermined Ref Gene",
+    dplyr::mutate(comment_gene = case_when(ct_data_table[targetgene]  == "Undetermined" ~ "Undetermined Target Gene")) %>%
+    dplyr::mutate(comment_ref = case_when(ct_data_table[refgene] == "Undetermined" ~ "Undetermined Ref Gene",
                                    ct_data_table[refgene] != "Undetermined" & ct_data_table[refgene] > refgene.cutoff ~ "High Ref Gene CT") )
-
-  #================UP TOHERRE WORKS!===============
-  #TODO here FIX so removes undetermine
-  #makle all CTs numeric: removes "Undertmined" results by coercians
-  pcrlong1[targetgene]  <- pcrlong1[targetgene] <- as.numeric(pcrlong1[targetgene])
-  pcrlong1[refgene] <- pcrlong1[refgene] <- as.numeric(pcrlong1[refgene])
-
-  #MAke a comment note
+  # any Undetermined values get replaced with NAs
   pcrlong1 <- pcrlong1 %>%
-    mutate(CT_comment2 = case_when(pcrlong1[refgene] > refgene.cutoff ~ "High 18S CT - Removed"))
+    dplyr::mutate_at(vars(colnames(pcrlong1[targetgene]),
+                   colnames(pcrlong1[refgene])),
+              na_if, "Undetermined")
 
-  #Replace values over the cutoff value with NA
-  pcrlong1$CT_18S[pcrlong1$CT_18S > cutoff18S] <- NA
+  #Replace values for the refgene that are over the refgene cutoff value with NA
+  pcrlong1[[refgene]][pcrlong1[[refgene]] > refgene.cutoff  ] <- NA
 
-  ####======= do dCT calc============ ######
+  # make sure CT values are numeric (if undetermineds in there, will be character)
+  pcrlong1[[targetgene]] <- as.numeric(pcrlong1[[targetgene]])
+  pcrlong1[[refgene]] <- as.numeric(pcrlong1[[refgene]])
+
+  # do dCT calc
   pcrlong1 <- pcrlong1 %>%
-    mutate(dCT = CT_Gene - CT_18S)
+    dplyr::mutate(dCT = pcrlong1[[targetgene]] - pcrlong1[[refgene]])
 
-  head(pcrlong1)
-  #====merge with Metadata file========
+  #====dtermine average dct per group, and pulling out the 'control' group average dct=====
   pcrlong2 <- pcrlong1
-  pcrlong2 <- merge(metadata_sep, pcrlong2, by="sampleID")
-
-  pcrlong2 <- pcrlong2 %>%
-    mutate(group = paste(gpr109a_genotype,stz_diabetes,diet,sep="_"))
-
-  #====dtermine acerage dct per group, and pulling out the 'control' group average dct=====
-  #note: the control group = "WT_N_LAGE" here
 
   mean_dct <- pcrlong2 %>%
-    group_by(group) %>%
-    summarize(mean_dct = mean(dCT, na.rm = T))
-  mean_dct
+    dplyr::group_by(treatment_group) %>%
+    dplyr::summarize(mean_dct = mean(dCT, na.rm = T))
 
-  control_dct <- (mean_dct %>% filter (group==reference.group))[2]
+  control_dct <- (mean_dct %>% filter (group==refgroup))[2]  #pulls out the mean dCT of the control group
   control_dct <- deframe(control_dct) #make it a value, rather than a tibble
 
   #=========calculate ddCT and fold change================
   pcrlong3 <- pcrlong2 %>%
-    mutate(ddCT = dCT - control_dct) %>%
-    mutate(fold_change = 2^-ddCT)
+    dplyr::mutate(ddCT = dCT - control_dct) %>%
+    dplyr::mutate(fold_change = 2^-ddCT)
 
   return(pcrlong3)
 }

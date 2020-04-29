@@ -4,13 +4,17 @@
 \alias{ddct_taq}
 \title{ddct_taq}
 \arguments{
-\item{quantstudio_output}{This is the 'results" page of the quantstudio output (currently requires to be exactly just at the results - to fix up and make it so just improt whole sheet methinks)}
+\item{ct_data_table}{Pre-prcoessed data here. Needs following minimum columns: "group", "ct_gene" (can be named anything), and "ct_18S" (can specify name)}
 
-\item{plate_map}{#this is a long list of which sample is in which well A1, A2, A3 etc (use output form melt384 for easiness perhaps)}
+\item{refgroup}{specfiy which group within the treatment_group column is your reference group (default = "control")}
 
-\item{refgene}{Specify EXACTLY what you're refence gene is called in the Quantstdio import (default VIC-18S)}
+\item{targetgene}{Specify EXACTLY name of target gene in the ct_data_table}
+
+\item{refgene}{Specify EXACTLY name of refence gene in the ct_data_table (default "ct-18s")}
+
+\item{refgene.cutoff}{CT cutoff for referene gene (default = 15)}
 }
 \description{
-Taq it easy! Here's a script that takes the Quantstudio RT-PCR output and your PCR template and then will go
-and make it all good man and do all that sweet ddCT calcs for you (TODO update)
+Taq it easy! Here's a script that takes your CT values for your 18S and gene of interest
+and does all those sweet ddCT calcs for you
 }
