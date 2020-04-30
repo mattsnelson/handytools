@@ -4,7 +4,7 @@
 #' @description Taq it easy! Here's a script that takes your CT values for your 18S and gene of interest
 #' and does all those sweet ddCT and fold change calcs for you
 #'
-#' @param ct_data_table Pre-prcoessed data here. Needs following minimum columns: "group" (100% necessary), "ct_gene" (can be named anything), and "ct_18S" (can specify name)
+#' @param ct_data_table Pre-prcoessed data here. Needs following minimum columns: "group" (necessary), "ct_gene" (can be named anything), and "ct_18S" (can specify name)
 #' @param refgroup specfiy which group within the treatment_group column is your reference group (default = "control")
 #' @param targetgene Specify EXACTLY name of target gene in the ct_data_table
 #' @param refgene Specify EXACTLY name of refence gene in the ct_data_table (default "ct-18s")

@@ -120,11 +120,13 @@ etc...
 
 Need to specify the names of your reference group, the target gene and reference gene (as they are named in the table). Also specify a cutoff for the refgene, values above this will be excluded (good sanity control in case low volume pipetted in).  
 
-`foldchange <- handytools::ddct(ct_data_table = pcr_results.mcp1, 
+```
+foldchange <- handytools::ddct(ct_data_table = pcr_results.mcp1, 
                      refgroup = "Control",
                      targetgene = "MCP-1",
                      refgene = "18S",
-                     refgene.cutoff = 10)`
+                     refgene.cutoff = 10)
+```
 
 
 ### ddct_taq_multi

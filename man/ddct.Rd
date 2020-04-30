@@ -4,7 +4,7 @@
 \alias{ddct}
 \title{ddct}
 \arguments{
-\item{ct_data_table}{Pre-prcoessed data here. Needs following minimum columns: "group" (100% necessary), "ct_gene" (can be named anything), and "ct_18S" (can specify name)}
+\item{ct_data_table}{Pre-prcoessed data here. Needs following minimum columns: "group" (necessary), "ct_gene" (can be named anything), and "ct_18S" (can specify name)}
 
 \item{refgroup}{specfiy which group within the treatment_group column is your reference group (default = "control")}
 
