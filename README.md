@@ -89,7 +89,11 @@ Using Quantstudio (3 or 5) with either Taqman probes (allowing to multiplex with
 
 Super simple handy script that takes a data frame in 384 well plate layout (e.g. the plate template you drew up in excel to show which samples go where) and converts it to a long list with the well position.
 
-So your 24 x 16 plate becomes this:
+```
+samples <- read.csv(my_384_well_plate.csv)
+samples_long_list <- handytools::melt384(samples)
+```
+So the 24 x 16 plate becomes this:
 
 |  well_position | sample_id |
 |----|---|
@@ -100,6 +104,15 @@ So your 24 x 16 plate becomes this:
 etc
 
 Doesn't seem like much, but it's super handy to have the plate template in this format for merging etc downstream with the Quantstudio output.
+
+### melt96
+
+Does same ting as `melt384` but for a 96 well plate.  
+
+```
+samples <- read.csv(my_96_well_plate.csv)
+samples_long_list <- handytools::melt96(samples)
+```
 
 ### ddct
 
