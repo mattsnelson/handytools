@@ -60,7 +60,7 @@ ddct <- function(ct_data_table, refgroup = "control", targetgene, refgene, refge
   pcrlong1 <- ct_data_table %>%
     dplyr::mutate(comment_gene = case_when(ct_data_table[targetgene]  == "Undetermined" ~ "Undetermined Target Gene")) %>%
     dplyr::mutate(comment_ref = case_when(ct_data_table[refgene] == "Undetermined" ~ "Undetermined Ref Gene",
-                                   ct_data_table[refgene] != "Undetermined" & ct_data_table[refgene] < refgene.cutoff ~ "High Ref Gene CT") )
+                                   ct_data_table[refgene] != "Undetermined" & ct_data_table[refgene] > refgene.cutoff ~ "High Ref Gene CT") )
   # any Undetermined values get replaced with NAs
   pcrlong1 <- pcrlong1 %>%
     dplyr::mutate_at(vars(colnames(pcrlong1[targetgene]),
@@ -68,7 +68,7 @@ ddct <- function(ct_data_table, refgroup = "control", targetgene, refgene, refge
               na_if, "Undetermined")
 
   #Replace values for the refgene that are over the refgene cutoff value with NA
-  pcrlong1[[refgene]][pcrlong1[[refgene]] < refgene.cutoff  ] <- NA
+  pcrlong1[[refgene]][pcrlong1[[refgene]] > refgene.cutoff  ] <- NA
 
   # make sure CT values are numeric (if undetermineds in there, will be character)
   pcrlong1[[targetgene]] <- as.numeric(pcrlong1[[targetgene]])
