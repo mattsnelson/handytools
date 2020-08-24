@@ -5,15 +5,12 @@
 
 # work in progress
 
-![construction](https://rsl.ethz.ch/research/researchtopics/dfab/_jcr_content/par/fullwidthimage/image.imageformat.fullwidth.299214605.jpg)
-
-
 
 Oh hai there! Are you a biologist who spends *way* too much time copying and pasting data in Microsoft Excel? I was like you too once, before I found the light and started practising awesome reproducible research with R.
 
 ![Awesome - Bojack](https://media.giphy.com/media/xT0GqH01ZyKwd3aT3G/giphy.gif)
 
-Over the course of my PhD I made many a handy little script for data wrangling the outputs of various experiments, icluding qPCR and ELISA plates, CLAMS data (and a link) and more. Ater many years living in various folders and subfolders, being copied and *slightly* modified (and then trying to find which modified copy I wanted), they finally have a home on the internet!
+Over the course of my PhD and postdoc, I made many a handy little script for data wrangling the outputs of various experiments, icluding qPCR and ELISA plates, CLAMS data (add a link) and more. Ater many years living in various folders and subfolders, being copied and *slightly* modified (and then trying to find which modified copy I wanted), they finally have a home on the internet!
 
 ## Installation
 
@@ -31,6 +28,33 @@ This is a basic example which shows you how to solve a common problem: (to fill 
 ``` r
 library(handytools)
 ## basic example code
+```
+
+## Prismify
+
+Takes 'tidy' data and makes it easy to paste into Graphpad Prism.
+
+Input Data:
+|  group | value |
+|----|---|
+| A  | 1.65 | 
+| B  | 2.43 |
+| B  | 3.42 |
+| C  | 5.61 |
+| A  | 2.54 | 
+etc.
+
+Output:
+|  A | B | C |
+|----|---|---|
+| 1.65 | 2.43 | 5.61 |
+|  2.54 | 3.42 | |
+|   |   |
+|   |   |
+
+Example workflow:
+```  
+ready_for_prism <- handytools::prismify(nice_tidy_data)
 ```
 
 ## ELISA analysis
@@ -127,13 +151,3 @@ foldchange <- handytools::ddct(ct_data_table = pcr_results.mcp1,
                      refgene = "18S",
                      refgene.cutoff = 10)
 ```
-
-
-### ddct_taq_multi
-
-maybe one day...or maybe not??
-
-### ddct_sybr
-
-TODO
-maybe one day...or maybe not??
