@@ -20,6 +20,6 @@ samples_long_list <- handytools::melt96(samples)
 #  well_position  sample_id
 #      A1         220
 #      A2         221
-#      A3         222 , etc....
+#      A3         222 , etc...
 
 }
