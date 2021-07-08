@@ -72,7 +72,7 @@ elisr <- function(template, od, blank = "B"){
     for(x in 1:8){
       current_well <- as.data.frame(c(template[x,y],od[x,y]))
       colnames(current_well) <- c("sample ID","OD")
-      long_list <- dplyr::bind_rows(long_list,current_well)
+      long_list <- rbind(long_list,current_well)
     }
 
   }
